@@ -5,7 +5,11 @@ pragma solidity ^0.8.19;
 //sepolia eth/usd
 //mainnet eth/usd
 
-contract HelperCofig{
+contract HelperCofig is Script {
+    //magic nmbers from mockv3aggregator
+    uint8 public constant DECIMALS=8;
+    int256 public constant INITIAL_PRICE=2000e8;
+
     NetworkConfig public activeNetworkConfig;
     //if we are on local anvil we use mocks otherwise paste the address from the live ones
     struct NetworkConfig{
@@ -24,7 +28,16 @@ contract HelperCofig{
         NetworkConfig sepoliaConfig=NetworkConfig({priceFeed: "address"});
         return sepoliaConfig;
     }
-    function getAnvilEthConfig() public pure returns(NetworkConfig memory){
+    function getAnvilEthConfig() public returns(NetworkConfig memory){
         //price feed address
+        //1.Deplpy the ,mocks
+        //2, return the mock address
+        vm.startBroadcast();
+        //MockV3Aggregator mockPriceFeed=new MOckV3 aggregator(8,2000e8)
+        vm.stopBroadcast();
+        NetworkConfig memory anvilConfig =NetworkConfig({
+            priceFeed: address(mockPriceFeed)
+        });
+        return anvilConfig;
     }
 }
